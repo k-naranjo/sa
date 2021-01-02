@@ -29,7 +29,7 @@ auth.set_access_token(access_token, access_token_secret)
 api = tw.API(auth, wait_on_rate_limit=True)
 
 
-search_query = "#defundthepolice -filter:retweets"
+search_query = "#vaccine -filter:retweets"
 
 # get tweets from the API
 tweets = tw.Cursor(api.search,
@@ -103,7 +103,7 @@ def wcloud(cleaned_words):
 tweets_wcloud = wcloud(clean_words)
 
 
-print('"Defund the police" tweets')
+print('vaccine tweets')
 
 plt.figure(1,figsize=(12,12))
 plt.imshow(tweets_wcloud)
