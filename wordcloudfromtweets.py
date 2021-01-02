@@ -1,7 +1,15 @@
-#Twitter hook
 
-# import tweepy
-import tweepy as tw
+import tweepy as tw #Twitter hook
+import numpy as np # linear algebra
+import pandas as pd # data processing
+import matplotlib.pyplot as plt
+#s%matplotlib inline
+from wordcloud import WordCloud,STOPWORDS
+
+#df = pd.read_csv('train.csv')
+#print(df.head(5))
+#print(df.tail(5))
+
 
 #reads login info
 f=open("../twitter_credentials.txt","r")
@@ -12,11 +20,6 @@ my_api_secret=lines[3].rstrip("\n")
 access_token=lines[5].rstrip("\n")
 access_token_secret=lines[7].rstrip("\n")
 f.close()
-
-#print(twitter_key)
-#print(twitter_secret)
-#print(access_token)
-#print(access_token_secret)
 
 
 # authenticate
@@ -32,23 +35,20 @@ search_query = "#defundthepolice -filter:retweets"
 tweets = tw.Cursor(api.search,
               q=search_query,
               lang="en",
-              since="2020-09-16").items(50)
+              since="2020-09-16").items(200)
 
 
 # store the API responses in - list third part 
 tweets_copy = []
 for tweet in tweets:
-	try:
-		tweets_copy.append(tweet)
-	except tw.TweepError as e:
-		print("Something went wrong")
-		print("Tweepy Error: {}".format(e))
+    try:
+        tweets_copy.append(tweet)
+    except tw.TweepError as e:
+        print("Something went wrong")
+        print("Tweepy Error: {}".format(e))
 
 print("Total Tweets fetched:", len(tweets_copy))
 
-
-#organize tweets from a data frame 
-import pandas as pd
 
 # intialize the dataframe
 tweets_df = pd.DataFrame()
@@ -74,3 +74,39 @@ for tweet in tweets_copy:
 
 # show the dataframe
 tweets_df.head()
+
+
+ 
+def clean_word(data):
+    #words = " ".join(data['tweet'])
+    words = " ".join(data['text'])
+    
+    cleaned_words = " ".join([word for word in words.split() 
+                             if 'http' not in word
+                             and not word.startswith('@')
+                             and not word.startswith('#')
+                             and word != 'RT'])
+    return cleaned_words
+
+clean_words = clean_word(tweets_df)
+
+
+def wcloud(cleaned_words):
+    wordcloud = WordCloud(stopwords=STOPWORDS,
+                         background_color='black',
+                         width=3000,
+                          height=2500
+                         ).generate(cleaned_words)
+    return wordcloud
+
+
+tweets_wcloud = wcloud(clean_words)
+
+
+print('"Defund the police" tweets')
+
+plt.figure(1,figsize=(12,12))
+plt.imshow(tweets_wcloud)
+plt.axis('off')
+plt.show()
+
