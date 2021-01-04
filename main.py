@@ -19,9 +19,13 @@ tweets_df=get_tweets(api,search_query,start_date,num_tweets)
 # show the dataframe
 tweets_df.head()
 
-
+#clean words for word clouds
 clean_words = clean_word(tweets_df)
+#create word cloud and save image
+wcloud(clean_words,"experiment2","Graph title")
+#run sentiment analysis classifier
+tweets_df=sa_tweets(tweets_df,"bar_1","Sentiment")
 
-#wcloud(clean_words,"experiment2","Graph title")
 
-sa_tweets(tweets_df)
+
+#save_df_to_db(tweets_df,"../database_credentials.txt","tweets2")

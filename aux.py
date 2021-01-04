@@ -10,7 +10,7 @@ import re
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
+from sqlalchemy import create_engine
 
 
 def connect_to_twitter(credentials_path):
@@ -33,6 +33,25 @@ def connect_to_twitter(credentials_path):
 	api = tw.API(auth, wait_on_rate_limit=True)
 
 	return api
+
+def save_df_to_db(df,database_credentials,table_name):
+  f=open(database_credentials,"r")
+  lines=f.readlines()
+  # your Twitter API key and API secret
+  my_host=lines[2].rstrip("\n")
+  my_user=lines[1].rstrip("\n")
+  my_db=lines[0].rstrip("\n")
+  my_password=lines[3].rstrip("\n")
+  f.close()
+
+  # Create SQLAlchemy engine to connect to MySQL Database
+  engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
+          .format(host=my_host, db=my_db, user=my_user, pw=my_password))
+
+  # Convert dataframe to sql table                                   
+  df.to_sql(table_name, engine, index=False)
+
+
 
 
 def get_tweets(api, search_query, start_date,num_tweets):
@@ -129,7 +148,7 @@ def dict_converter(dict1):
     dictlist.append(temp)
   return dictlist
 
-def sa_tweets(tweets_df):
+def sa_tweets(tweets_df,image_path,image_title):
 	
 	#preprocess tweets
 	tweets_df['cleaned_text']=tweets_df['text'].apply(preprocess_tweet_text)
@@ -153,3 +172,25 @@ def sa_tweets(tweets_df):
 	  print("compound score is "+ str(aux_list[3][1]))
 
 	print(tweets_df[['cleaned_text','compound']])
+
+
+	num_pos=len(tweets_df[tweets_df.compound>0])
+	num_neg=len(tweets_df[tweets_df.compound<0])
+	print ("positive tweets: "+str(num_pos))
+	print ("negative tweets: "+str(num_neg))
+
+
+	fig = plt.figure()
+	ax = fig.add_axes([0,0,1,1])
+	classification = ['Positive Tweets', 'Negative Tweets']
+	scores = [num_pos,num_neg]
+	ax.bar(classification,scores, color=['red', 'green' ])
+	#plt.show()
+
+	plt.title(image_title)
+	#plt.show()
+	plt.savefig(image_path + '.png')
+
+	return tweets_df
+
+
