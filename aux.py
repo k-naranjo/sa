@@ -11,7 +11,7 @@ import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sqlalchemy import create_engine
-
+from sqlalchemy.types import Text
 
 def connect_to_twitter(credentials_path):
 
@@ -44,14 +44,19 @@ def save_df_to_db(df,database_credentials,table_name):
   my_password=lines[3].rstrip("\n")
   f.close()
 
-  # Create SQLAlchemy engine to connect to MySQL Database
-  engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
-          .format(host=my_host, db=my_db, user=my_user, pw=my_password))
-
-  # Convert dataframe to sql table                                   
-  df.to_sql(table_name, engine, index=False)
+  try:
 
 
+    # Create SQLAlchemy engine to connect to MySQL Database
+    engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
+            .format(host=my_host, db=my_db, user=my_user, pw=my_password))
+
+    df2=df.copy()
+    df2.hashtags.astype(str)
+    # Convert dataframe to sql table                                   
+    df2.to_sql(table_name, engine, if_exists='append', index=False,dtype={'hashtags':Text})
+  except Exception as e:
+    print("Houston, we've got a problem" +str(e))
 
 
 def get_tweets(api, search_query, start_date,num_tweets):
@@ -86,14 +91,18 @@ def get_tweets(api, search_query, start_date,num_tweets):
           text = api.get_status(id=tweet.id, tweet_mode='extended').full_text
       except:
           pass
-      tweets_df = tweets_df.append(pd.DataFrame({'user_name': tweet.user.name, 
-                                                 'user_location': tweet.user.location,\
+      tweets_df = tweets_df.append(pd.DataFrame({
+                                                 'tweet_id': tweet.id,
+                                                 'user_id':tweet.user.id,
+                                                 'user_name': tweet.user.name, 
+                                                 'user_location': tweet.user.location,
                                                  'user_description': tweet.user.description,
                                                  'user_verified': tweet.user.verified,
                                                  'date': tweet.created_at,
                                                  'text': text, 
                                                  'hashtags': [hashtags if hashtags else None],
-                                                 'source': tweet.source}))
+                                                 'source': tweet.source
+                                                 }))
       tweets_df = tweets_df.reset_index(drop=True)
   return tweets_df
 
