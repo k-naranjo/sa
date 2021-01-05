@@ -52,7 +52,7 @@ def save_df_to_db(df,database_credentials,table_name):
             .format(host=my_host, db=my_db, user=my_user, pw=my_password))
 
     df2=df.copy()
-    df2.hashtags.astype(str)
+    df2['hashtags']=df2.hashtags.astype(str)
     # Convert dataframe to sql table                                   
     df2.to_sql(table_name, engine, if_exists='append', index=False,dtype={'hashtags':Text})
   except Exception as e:
