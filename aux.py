@@ -157,49 +157,45 @@ def dict_converter(dict1):
     dictlist.append(temp)
   return dictlist
 
-def sa_tweets(tweets_df,image_path,image_title):
-	
-	#preprocess tweets
-	tweets_df['cleaned_text']=tweets_df['text'].apply(preprocess_tweet_text)
+def sa_tweets(tweets_df, image_path, image_title):
 
-	# show the dataframe
-	#tweets_df.head()
-	sid = SentimentIntensityAnalyzer()
+  tweets_df['cleaned_text']=tweets_df['text'].apply(preprocess_tweet_text)
 
-	tweets_df['neg']=0.0
-	tweets_df['neu']=0.0
-	tweets_df['pos']=0.0
-	tweets_df['compound']=0.0
+  #show the dataframe
+  #tweets_df.head
+  sid=SentimentIntensityAnalyzer()
 
-
-	for i in range(len(tweets_df)): 
-	  aux_list=dict_converter(sid.polarity_scores(tweets_df.loc[i,'cleaned_text']))
-	  tweets_df.loc[i,'neg']=aux_list[0][1]
-	  tweets_df.loc[i,'neu']=aux_list[1][1]
-	  tweets_df.loc[i,'pos']=aux_list[2][1]
-	  tweets_df.loc[i,'compound']=aux_list[3][1]
-	  print("compound score is "+ str(aux_list[3][1]))
-
-	print(tweets_df[['cleaned_text','compound']])
+  tweets_df['neg']=0.0
+  tweets_df['neu']=0.0
+  tweets_df['pos']=0.0
+  tweets_df['compound']=0.0
 
 
-	num_pos=len(tweets_df[tweets_df.compound>0])
-	num_neg=len(tweets_df[tweets_df.compound<0])
-	print ("positive tweets: "+str(num_pos))
-	print ("negative tweets: "+str(num_neg))
+  for i in range(len(tweets_df)):
+    aux_list=dict_converter(sid.polarity_scores(tweets_df.loc[i,'cleaned_text']))
+    tweets_df.loc[i,'neg']=aux_list[0][1]
+    tweets_df.loc[i,'neu']=aux_list[1][1]
+    tweets_df.loc[i,'pos']=aux_list[2][1]
+    tweets_df.loc[i,'compound']=aux_list[3][1]
+
+    print(tweets_df[['cleaned_text', 'compound']])
+
+  num_pos=len(tweets_df[tweets_df.compound>0])
+  num_neg=len(tweets_df[tweets_df.compound<0])
+  print ("positive tweets: "+str(num_pos))
+  print ("negative tweets: "+str(num_neg))
+
+  fig=plt.figure()
+  ax=fig.add_axes([0,0,1,1])
+  classification=['Positive Tweets', 'Negative Tweets']
+  scores=[num_pos, num_neg]
+  y_pos=np.arange(len(classification))
+  ax.bar(y_pos, scores, color=['red', 'green'])
+
+  #plt.show()
+  plt.title(image_title)
+  plt.savefig(image_path+'.png')
 
 
-	fig = plt.figure()
-	ax = fig.add_axes([0,0,1,1])
-	classification = ['Positive Tweets', 'Negative Tweets']
-	scores = [num_pos,num_neg]
-	ax.bar(classification,scores, color=['red', 'green' ])
-	#plt.show()
-
-	plt.title(image_title)
-	#plt.show()
-	plt.savefig(image_path + '.png')
-
-	return tweets_df
-
+  return tweets_df
 
