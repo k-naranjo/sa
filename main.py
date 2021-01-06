@@ -30,14 +30,11 @@ from aux import *
 # tweets_df=sa_tweets(tweets_df,"vaccine_2021-01-04","Vaccine mentions (2021-01-04)")
 
 # #save to csv file
-# tweets_df.to_csv('../data/tweets_'+search_for+'_'+start_date+'.csv', index = True) 
+# tweets_df.to_csv('../data/tweets_'+search_for+'_'+start_date+'.csv', index = True)
+
 # #save to database
 # #save_df_to_db(tweets_df,"../database_credentials.txt","tweets")
 # #save_df_to_db(tweets_df,"../database_credentials.txt","tweets_"+search_for)
-
-
-
-
 
 
 
@@ -50,8 +47,8 @@ from aux import *
 tweets_df2=pd.read_csv("../data/tweets_#vaccine_2021-01-04.csv")
 #print(tweets_df2.head())
 #clean words for word clouds
-clean_words2 = clean_word(tweets_df2)
+#clean_words2 = clean_word(tweets_df2)
 #create word cloud and save image
-wcloud(clean_words2,"read_experiment","Vaccine word cloud 2- 2021-01-04")
+#wcloud(clean_words2,"read_experiment","Vaccine word cloud 2- 2021-01-04")
 #run sentiment analysis classifier
-tweets_df2=sa_tweets(tweets_df2,"vaccine_2021-01-04(2)","Vaccine mentions (2021-01-04)")
+tweets_df2=sa_tweets(tweets_df2,"vaccine_image_test","Vaccine mentions (2021-01-04)")
