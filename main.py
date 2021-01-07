@@ -15,19 +15,19 @@ api=connect_to_twitter("../twitter_credentials.txt")
 
 search_for="#vaccine"
 search_query = search_for + " -filter:retweets"
-start_date="2021-01-01"
-until_date="2021-01-02"
-num_tweets=20
+start_date="2020-12-30"
+until_date="2021-01-01"
+num_tweets=200
 tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
 #print(tweets_df[['date']]) #date verification
 # show the dataframe
 #tweets_df.head()
 
-#clean words for word clouds
-#clean_words = clean_word(tweets_df)
-#create word cloud and save image
-#wcloud(clean_words,"trial1","Vaccine word cloud - "+start_date)
+# clean words for word clouds
+clean_words = clean_word(tweets_df)
+create word cloud and save image
+wcloud(clean_words,"trial1","Vaccine word cloud - "+start_date)
 
 #run sentiment analysis classifier
 tweets_df=sa_tweets(tweets_df,"vaccine_"+start_date,"Vaccine mentions ("+start_date+")")
@@ -53,4 +53,4 @@ tweets_df=sa_tweets(tweets_df,"vaccine_"+start_date,"Vaccine mentions ("+start_d
 
 
 #run sentiment analysis classifier
-#tweets_df2=sa_tweets(tweets_df2,"vaccine_image_test","Vaccine mentions (2021-01-04)")
+# tweets_df2=sa_tweets(tweets_df2,"vaccine_image_test","Vaccine mentions (2021-01-04)")

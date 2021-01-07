@@ -202,7 +202,7 @@ def sa_tweets(tweets_df, image_path, image_title):
 
   y_pos=np.arange(len(classification))
   #plt.bar(y_pos,scores, align='center',  color=['#EE442F', '#00ff00', '#0000ff'])
-  plt.bar(y_pos,percentages, align='center',  color=['#EE442F', '#00ff00', '#0000ff'])
+  plt.bar(y_pos,percentages, align='center',  color=['#ABC3C9', '#E0DCD3', '#CCBE9F'])
   plt.ylabel("Percentage")
   plt.xticks(y_pos, classification)
   plt.title(image_title + '('+str(num_tweets)+' tweets)' )
