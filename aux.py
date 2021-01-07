@@ -59,12 +59,13 @@ def save_df_to_db(df,database_credentials,table_name):
     print("Houston, we've got a problem" +str(e))
 
 
-def get_tweets(api, search_query, start_date,num_tweets):
+def get_tweets(api, search_query, start_date, until_date,num_tweets):
   # get tweets from the API
   tweets = tw.Cursor(api.search,
                 q=search_query,
                 lang="en",
-                since=start_date).items(num_tweets)
+                since=start_date,
+                until=until_date).items(num_tweets)
 
 
   # store the API responses in - list third part 
@@ -178,24 +179,36 @@ def sa_tweets(tweets_df, image_path, image_title):
     tweets_df.loc[i,'pos']=aux_list[2][1]
     tweets_df.loc[i,'compound']=aux_list[3][1]
 
-    print(tweets_df[['cleaned_text', 'compound']])
+  print(tweets_df[['cleaned_text', 'compound']])
 
-  num_pos=len(tweets_df[tweets_df.compound>0])
-  num_neg=len(tweets_df[tweets_df.compound<0])
+
+  thres=0.25
+  num_pos=len(tweets_df[tweets_df.compound>=thres])
+  num_neg=len(tweets_df[tweets_df.compound<=-thres])
+  num_neu=len(tweets_df[(tweets_df.compound<thres) & (tweets_df.compound>-thres)])
+  
+  num_tweets=len(tweets_df.index)
+  per_pos=(num_pos/num_tweets)*100
+  per_neg=(num_neg/num_tweets)*100
+  per_neu=(num_neu/num_tweets)*100
+  
   print ("positive tweets: "+str(num_pos))
   print ("negative tweets: "+str(num_neg))
+  print ("neutral tweets: "+str(num_neu))
 
-  fig=plt.figure()
-  ax=fig.add_axes([0,0,1,1])
-  classification=['Positive Tweets', 'Negative Tweets']
-  scores=[num_pos, num_neg]
+  classification=['Positive', 'Negative', 'Hard to classify/Neutral']
+  scores=[num_pos, num_neg, num_neu]
+  percentages=[per_pos, per_neg, per_neu]
+
   y_pos=np.arange(len(classification))
-  ax.bar(y_pos, scores, color=['red', 'green'])
+  #plt.bar(y_pos,scores, align='center',  color=['#EE442F', '#00ff00', '#0000ff'])
+  plt.bar(y_pos,percentages, align='center',  color=['#EE442F', '#00ff00', '#0000ff'])
+  plt.ylabel("Percentage")
+  plt.xticks(y_pos, classification)
+  plt.title(image_title + '('+str(num_tweets)+' tweets)' )
 
-  #plt.show()
-  plt.title(image_title)
   plt.savefig(image_path+'.png')
-
+  plt.show()
 
   return tweets_df
 
