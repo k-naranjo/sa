@@ -136,6 +136,7 @@ def wcloud(cleaned_words,word_cloud_name, word_cloud_caption):
   plt.title(word_cloud_caption)
   #plt.show()
   plt.savefig(word_cloud_name + '.png')
+  plt.close('all')
 
 
 def preprocess_tweet_text(tweet):
@@ -208,7 +209,8 @@ def sa_tweets(tweets_df, image_path, image_title):
   plt.title(image_title + '('+str(num_tweets)+' tweets)' )
 
   plt.savefig(image_path+'.png')
-  plt.show()
+  plt.close('all')
+  ##plt.show()
 
   return tweets_df
 

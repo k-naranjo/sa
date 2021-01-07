@@ -17,7 +17,7 @@ search_for="#vaccine"
 search_query = search_for + " -filter:retweets"
 start_date="2020-12-30"
 until_date="2021-01-01"
-num_tweets=200
+num_tweets=10
 tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
 #print(tweets_df[['date']]) #date verification
@@ -26,11 +26,11 @@ tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
 # clean words for word clouds
 clean_words = clean_word(tweets_df)
-create word cloud and save image
-wcloud(clean_words,"trial1","Vaccine word cloud - "+start_date)
+#create word cloud and save image
+wcloud(clean_words,"../data/wc_"+start_date,"Vaccine word cloud - "+start_date)
 
 #run sentiment analysis classifier
-tweets_df=sa_tweets(tweets_df,"vaccine_"+start_date,"Vaccine mentions ("+start_date+")")
+tweets_df=sa_tweets(tweets_df,"../data/barg_vaccine_"+start_date,"Vaccine mentions ("+start_date+")")
 
 #save to csv file
 #tweets_df.to_csv('../data/tweets_'+search_for+'_'+start_date+'.csv', index = True)
