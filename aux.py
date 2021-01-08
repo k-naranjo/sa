@@ -13,6 +13,15 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sqlalchemy import create_engine
 from sqlalchemy.types import Text
 
+import geocoder
+import os
+from selenium import webdriver
+import folium
+import time
+
+
+
+
 def connect_to_twitter(credentials_path):
   """
   Creates a connection to the Twitter API.
@@ -369,3 +378,40 @@ def sa_tweets(tweets_df, image_path, image_title):
   #plt.show()
 
   return tweets_df
+
+def create_tweets_map(df, map_path):
+	#map creation
+	m=folium.Map()
+
+
+	#add markers
+	for i in range(len(df)):
+		if df.loc[i,'user_location']!='':
+			#give in the normal address we know
+			address = geocoder.osm(df.loc[i,'user_location'])
+			#add marker to map
+			folium.Marker(address.latlng, popup='Statue Of Unity', tooltip='Click Me!').add_to(m)
+
+
+	# #give in the normal address we know
+	# address = geocoder.osm('Columbus, Ohio')
+	# #add marker to map
+	# folium.Marker(address.latlng, popup='Statue Of Unity', tooltip='Click Me!').add_to(m)
+
+
+	fn = map_path+'.html' #path to the html file
+
+	# can be defined to fit all points on the map
+	#m.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]])
+	m.save(fn)
+
+	delay = 2
+	tmpurl = 'file://{path}/{mapfile}'.format(path=os.getcwd(),mapfile=fn)
+	m.save(fn)
+	your_browser_path= '/Applications/Firefox.app/Contents/MacOS'
+	driver = webdriver.Firefox()
+	driver.get(tmpurl)
+	#Give the map tiles some time to load
+	time.sleep(delay)
+	driver.save_screenshot(fn + ".png")
+	driver.close()
