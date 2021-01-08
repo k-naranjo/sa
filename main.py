@@ -15,9 +15,9 @@ api=connect_to_twitter("../twitter_credentials.txt")
 
 search_for="#vaccine"
 search_query = search_for + " -filter:retweets"
-start_date="2020-12-30"
-until_date="2021-01-01"
-num_tweets=10
+start_date="2021-01-06"
+until_date="2021-01-07"
+num_tweets=400
 tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
 #print(tweets_df[['date']]) #date verification

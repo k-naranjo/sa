@@ -14,27 +14,62 @@ from sqlalchemy import create_engine
 from sqlalchemy.types import Text
 
 def connect_to_twitter(credentials_path):
+  """
+  Creates a connection to the Twitter API.
 
-	#reads login info
-	#f=open("../twitter_credentials.txt","r")
-	f=open(credentials_path,"r")
-	lines=f.readlines()
-	# your Twitter API key and API secret
-	my_api_key=lines[1].rstrip("\n")
-	my_api_secret=lines[3].rstrip("\n")
-	access_token=lines[5].rstrip("\n")
-	access_token_secret=lines[7].rstrip("\n")
-	f.close()
+  Given a file containing the Twitter API credentials in 4 separate lines (API key, API secret, access token, and access token secret), it returns a twitter connection object.
 
-	# authenticate
-	auth = tw.OAuthHandler(my_api_key, my_api_secret)
-	auth.set_access_token(access_token, access_token_secret)
+  Parameters
+  ---------
+  credentials_path: str
+      the path to a file containing the API info:
+      1st line: API key
+      2nd line: API secret
+      3rd line: access token
+      4th line: access token secret
 
-	api = tw.API(auth, wait_on_rate_limit=True)
+  Returns
+  -------
+    API (Tweepy Object)
+    a connection to the Twitter API object
 
-	return api
+  """
+  #reads login info
+  #f=open("../twitter_credentials.txt","r")
+  f=open(credentials_path,"r")
+  lines=f.readlines()
+  # your Twitter API key and API secret
+  my_api_key=lines[1].rstrip("\n")
+  my_api_secret=lines[3].rstrip("\n")
+  access_token=lines[5].rstrip("\n")
+  access_token_secret=lines[7].rstrip("\n")
+  f.close()
+
+  # authenticate
+  auth = tw.OAuthHandler(my_api_key, my_api_secret)
+  auth.set_access_token(access_token, access_token_secret)
+
+  api = tw.API(auth, wait_on_rate_limit=True)
+
+  return api
 
 def save_df_to_db(df,database_credentials,table_name):
+  """
+  Saves a dataframe to a database
+
+  Given a Pandas dataframe, a file containing the database credentials and the DB table's name, it updates the table with the information in the dataframe.
+
+  Parameters
+  ---------
+  df: str
+      a Pandas dataframe containing the information to be saved.
+      The file must have 4 lines:
+      1st line: db name
+      2nd line: db user
+      3rd line: host
+      4th line: password
+
+  """
   f=open(database_credentials,"r")
   lines=f.readlines()
   # your Twitter API key and API secret
@@ -60,6 +95,39 @@ def save_df_to_db(df,database_credentials,table_name):
 
 
 def get_tweets(api, search_query, start_date, until_date,num_tweets):
+  """
+  Gets tweets from Twitter that match a especific query.
+
+  Given a Twitter connection object, a search term, a start date, and a limit date, it returns a dataframe containing the tweets matching the given criteria. 
+
+  Parameters
+  ---------
+  api: API (Tweepy object)
+      The connection to the Twitter API
+  search_query: str
+      search term
+  start_date: str
+      string with start date in YYYY-MM-DD format
+  until_date: str
+      string with limit date in YYYY-MM-DD format. Tweets posted on this date or after won't be returned.
+  num_tweets: int
+      Number of tweets to be fetched.
+
+  Returns
+  -------
+  DataFrame
+    a dataframe containing the tweet information:
+                        user_name 
+                        user_location
+                        user_description
+                        user_verified
+                        date
+                        text 
+                        hashtags
+                        source
+
+  """
+
   # get tweets from the API
   tweets = tw.Cursor(api.search,
                 q=search_query,
@@ -109,24 +177,58 @@ def get_tweets(api, search_query, start_date, until_date,num_tweets):
 
 
 def clean_word(data):
-    #words = " ".join(data['tweet'])
-    words = " ".join(data['text'])
+  """
+  Prepares array of words for word cloud visualization.
+
+  Given a dataframe with a 'text' field, it creates an array of words from which stop words have been removed.
+
+  Parameters
+  ---------
+  data: DataFrame
+      dataframe with field 'text' that includes the text to be processed
+
+  Returns
+  -------
+    Array
+    an array containing all the relevant words for word cloud visualization
+
+  """
+
+  #words = " ".join(data['tweet'])
+  words = " ".join(data['text'])
     
-    cleaned_words = " ".join([word for word in words.split() 
-                             if 'http' not in word
-                             and not word.startswith('@')
-                             and not word.startswith('#')
-                             and word != 'RT'])
-    return cleaned_words
+  cleaned_words = " ".join([word for word in words.split() 
+                           if 'http' not in word
+                           and not word.startswith('@')
+                           and not word.startswith('#')
+                           and word != 'RT'])
+  return cleaned_words
 
 
+def wcloud(clean_words,word_cloud_name, word_cloud_caption):
 
-def wcloud(cleaned_words,word_cloud_name, word_cloud_caption):
+  """
+  generates a word cloud visualization.
+
+  Given an array of words, it creates a word cloud visualization and saves it to a file.
+
+  Parameters
+  ---------
+  clean_words: Array
+      Array of words to be visualized.
+
+  word_cloud_name: str
+      wordcloud's filename
+
+  word_cloud_caption: str
+      word cloud caption (title)
+
+  """
   wordcloud = WordCloud(stopwords=STOPWORDS,
                         background_color='black',
                         width=3000,
                         height=2500
-                        ).generate(cleaned_words)
+                        ).generate(clean_words)
 
   print('vaccine tweets')
 
@@ -140,19 +242,50 @@ def wcloud(cleaned_words,word_cloud_name, word_cloud_caption):
 
 
 def preprocess_tweet_text(tweet):
-	tweet.lower()
-	# Remove urls
-	tweet = re.sub(r"http\S+|www\S+|https\S+", '', tweet, flags=re.MULTILINE)
-	# Remove user @ references and '#' from tweet
-	tweet = re.sub(r'\@\w+|\#','', tweet)
-	# Remove punctuations
-	tweet = tweet.translate(str.maketrans('', '', string.punctuation))
-	# Remove stopwords
-	#tweet_tokens = word_tokenize(tweet)
-	#filtered_words = [w for w in tweet_tokens if not w in stop_words]
-	return tweet
+  """
+  Preprocess text for the sentiment classifier.
+
+  Given a tweet text in string form, it removes user mentions, hashtags, url, punctuation, and stopwords.
+
+  Parameters
+  ---------
+  tweet: str
+        raw tweet text
+  Returns
+  -------
+    str
+    tweet text without user mentions, hashtags, url, punctuation, and stopwords
+
+  """
+  tweet.lower()
+  # Remove urls
+  tweet = re.sub(r"http\S+|www\S+|https\S+", '', tweet, flags=re.MULTILINE)
+  # Remove user @ references and '#' from tweet
+  tweet = re.sub(r'\@\w+|\#','', tweet)
+  # Remove punctuations
+  tweet = tweet.translate(str.maketrans('', '', string.punctuation))
+  # Remove stopwords
+  #tweet_tokens = word_tokenize(tweet)
+  #filtered_words = [w for w in tweet_tokens if not w in stop_words]
+  return tweet
 
 def dict_converter(dict1):
+  """
+  It converts a dictionary to a list
+
+  Given a dictionary, it returns a list containing the original data.
+
+  Parameters
+  ---------
+  dict1: Dictionary
+        original data in dictionary form
+  Returns
+  -------
+    List
+    list containing the original data
+
+  """
+
   dictlist = list()
   for key, value in dict1.items():
     temp = [key,value]
@@ -160,7 +293,32 @@ def dict_converter(dict1):
   return dictlist
 
 def sa_tweets(tweets_df, image_path, image_title):
+  """
+  apply a sentiment classifier to a dataframe of tweets
 
+  Given a dataframe including a 'text' field, it runs a sentiment classifier 
+  and it returns an augmented version of the original dataframe that includes
+  the results of the analysis in the fields 'neg', 'neu', pos', and 'compound'.
+  It also generates a bar graph of the results.
+
+  Parameters
+  ----------
+  tweets_df:  DataFrame
+              It must include a 'text' field.
+  
+  image_path: str
+              filepath for the bar graph
+              
+  image_title:str
+              image caption
+
+  Returns
+  -------
+    DataFrame
+    a tweets' dataframe including the original fields and the new fields
+    'neg', 'neu', pos', and 'compound' that contain the results of the
+    analysis.
+  """
   tweets_df['cleaned_text']=tweets_df['text'].apply(preprocess_tweet_text)
 
   #show the dataframe
@@ -172,7 +330,6 @@ def sa_tweets(tweets_df, image_path, image_title):
   tweets_df['pos']=0.0
   tweets_df['compound']=0.0
 
-
   for i in range(len(tweets_df)):
     aux_list=dict_converter(sid.polarity_scores(tweets_df.loc[i,'cleaned_text']))
     tweets_df.loc[i,'neg']=aux_list[0][1]
@@ -181,7 +338,6 @@ def sa_tweets(tweets_df, image_path, image_title):
     tweets_df.loc[i,'compound']=aux_list[3][1]
 
   print(tweets_df[['cleaned_text', 'compound']])
-
 
   thres=0.25
   num_pos=len(tweets_df[tweets_df.compound>=thres])
@@ -210,7 +366,6 @@ def sa_tweets(tweets_df, image_path, image_title):
 
   plt.savefig(image_path+'.png')
   plt.close('all')
-  ##plt.show()
+  #plt.show()
 
   return tweets_df
-
