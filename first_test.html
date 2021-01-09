@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5ca4cb01c3964fa082224e530c46b362 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_5ca4cb01c3964fa082224e530c46b362" ></div>
+        
+</body>
+<script>    
+    
+            var map_5ca4cb01c3964fa082224e530c46b362 = L.map(
+                "map_5ca4cb01c3964fa082224e530c46b362",
+                {
+                    center: [0, 0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 1,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a36b7a3a9d03490fa1e84996814f38a7 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+            var marker_770136bccf6a4a60be00061ea9416abd = L.marker(
+                [38.8949924, -77.0365581],
+                {}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+        var popup_49477e62135f4fd5ab3636b687c2997d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0e3a7f81e1e244818f9a9c4d15da93a8 = $(`<div id="html_0e3a7f81e1e244818f9a9c4d15da93a8" style="width: 100.0%; height: 100.0%;">Statue Of Unity</div>`)[0];
+            popup_49477e62135f4fd5ab3636b687c2997d.setContent(html_0e3a7f81e1e244818f9a9c4d15da93a8);
+        
+
+        marker_770136bccf6a4a60be00061ea9416abd.bindPopup(popup_49477e62135f4fd5ab3636b687c2997d)
+        ;
+
+        
+    
+    
+            marker_770136bccf6a4a60be00061ea9416abd.bindTooltip(
+                `<div>
+                     Click Me!
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bfd609627b1043179d19763070a60dba = L.marker(
+                [61.0666922, -107.9917071],
+                {}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+        var popup_5201f307eeb6427ab306d986d816235b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f9c285c8154844dbaf6a24410d8733c2 = $(`<div id="html_f9c285c8154844dbaf6a24410d8733c2" style="width: 100.0%; height: 100.0%;">Statue Of Unity</div>`)[0];
+            popup_5201f307eeb6427ab306d986d816235b.setContent(html_f9c285c8154844dbaf6a24410d8733c2);
+        
+
+        marker_bfd609627b1043179d19763070a60dba.bindPopup(popup_5201f307eeb6427ab306d986d816235b)
+        ;
+
+        
+    
+    
+            marker_bfd609627b1043179d19763070a60dba.bindTooltip(
+                `<div>
+                     Click Me!
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_88abff4065ee45299247373ea5111248 = L.marker(
+                [26.8233946, -80.1386547],
+                {}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+        var popup_48b5a8baa80c4a57acf422286bc0bdd2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_faa054c994334cbeb15874f2c6b902cd = $(`<div id="html_faa054c994334cbeb15874f2c6b902cd" style="width: 100.0%; height: 100.0%;">Statue Of Unity</div>`)[0];
+            popup_48b5a8baa80c4a57acf422286bc0bdd2.setContent(html_faa054c994334cbeb15874f2c6b902cd);
+        
+
+        marker_88abff4065ee45299247373ea5111248.bindPopup(popup_48b5a8baa80c4a57acf422286bc0bdd2)
+        ;
+
+        
+    
+    
+            marker_88abff4065ee45299247373ea5111248.bindTooltip(
+                `<div>
+                     Click Me!
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c6c8ccb4345f4ab18c8c2759654d9a33 = L.marker(
+                [53.7974185, -1.5437941],
+                {}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+        var popup_b4a273ebe47f43049890fc38338319f9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_66e8711cac154aa98c39b9aab77345da = $(`<div id="html_66e8711cac154aa98c39b9aab77345da" style="width: 100.0%; height: 100.0%;">Statue Of Unity</div>`)[0];
+            popup_b4a273ebe47f43049890fc38338319f9.setContent(html_66e8711cac154aa98c39b9aab77345da);
+        
+
+        marker_c6c8ccb4345f4ab18c8c2759654d9a33.bindPopup(popup_b4a273ebe47f43049890fc38338319f9)
+        ;
+
+        
+    
+    
+            marker_c6c8ccb4345f4ab18c8c2759654d9a33.bindTooltip(
+                `<div>
+                     Click Me!
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0a85839f245443c79675cb6cf73bd78b = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_5ca4cb01c3964fa082224e530c46b362);
+        
+    
+        var popup_bf53151f4cd34898b75325e7b66e6e3e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bfb1023a09fe46b48bd14592e341780b = $(`<div id="html_bfb1023a09fe46b48bd14592e341780b" style="width: 100.0%; height: 100.0%;">Statue Of Unity</div>`)[0];
+            popup_bf53151f4cd34898b75325e7b66e6e3e.setContent(html_bfb1023a09fe46b48bd14592e341780b);
+        
+
+        marker_0a85839f245443c79675cb6cf73bd78b.bindPopup(popup_bf53151f4cd34898b75325e7b66e6e3e)
+        ;
+
+        
+    
+    
+            marker_0a85839f245443c79675cb6cf73bd78b.bindTooltip(
+                `<div>
+                     Click Me!
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

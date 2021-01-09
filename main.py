@@ -13,39 +13,44 @@ from aux import *
 
 api=connect_to_twitter("../twitter_credentials.txt")
 
-search_for="astrazeneca + vaccine"
+search_for="pfizer + vaccine"
 search_query = search_for + " -filter:retweets"
-start_date="2021-01-02"
-until_date="2021-01-03"
-num_tweets=
-cloud_title=""
-barg_title=""
-map_filename="a_map"
+start_date="2020-01-08"
+until_date="2021-01-09"
+num_tweets=100
+cloud_title="pfizer vaccine"
+barg_title="pfizer vaccine"
+map_filename="pfizer_vaccine_map"
 
-
+#######################################################################
 
 tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
-#print(tweets_df[['date']]) #date verification
-# show the dataframe
-#tweets_df.head()
+if len(tweets_df.index)!=0:
 
-# clean words for word clouds
-clean_words = clean_word(tweets_df)
-#create word cloud and save image
-wcloud(clean_words,"../data/wc_"+search_for.replace(" ","_")+"_"+start_date,cloud_title+" - "+start_date)
+	#print(tweets_df[['date']]) #date verification
+	# show the dataframe
+	#tweets_df.head()
 
-#run sentiment analysis classifier
-tweets_df=sa_tweets(tweets_df,"../data/barg_vaccine_"+start_date,barg_title+" ("+start_date+")")
+	# clean words for word clouds
+	clean_words = clean_word(tweets_df)
+	#create word cloud and save image
+	wcloud(clean_words,"../data/wc_"+search_for.replace(" ","_")+"_"+start_date,cloud_title+" - "+start_date)
 
-#create a map
-create_tweets_map(tweets_df,"../data/maps/"+a_map)
+	#run sentiment analysis classifier
+	tweets_df=sa_tweets(tweets_df,"../data/barg_vaccine_"+start_date,barg_title+" ("+start_date+")")
 
-#save to csv file
-tweets_df.to_csv('../data/tweets_'+search_for.replace(" ","_")+'_'+start_date+'.csv', index = True)
+	#save to csv file
+	tweets_df.to_csv('../data/tweets_'+search_for.replace(" ","_")+'_'+start_date+'.csv', index = True)
 
-# #save to database
-# #save_df_to_db(tweets_df,"../database_credentials.txt","tweets_"+search_for)
+	# #save to database
+	# #save_df_to_db(tweets_df,"../database_credentials.txt","tweets_"+search_for)
+
+
+	#create a map
+	create_tweets_map(tweets_df,"../data/maps/"+map_filename)
+else:
+	print("No tweets were retrieved.")
 
 
 ########################################################################
