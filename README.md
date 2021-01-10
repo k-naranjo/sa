@@ -27,11 +27,11 @@ In order to use this code you must have the following installed:
 * `pandas`
 * `matplotlib.pyplot`
 
-* `nltk`
+* `nltk` (sentiment classifier)
 
-* `selenium`
-* `geocoder`
-* `geckodriver`
+* `selenium` (map functionality)
+* `geocoder` (map functionality)
+* `geckodriver` (map functionality)
 
 
 ###Examples
@@ -57,7 +57,8 @@ You need a Pandas DataFrame containing a `text` field for the tweet's text.
 ```
 clean_words = clean_word(tweets_df) # clean words for word clouds
 
-wcloud(clean_words,"your_file_location/filename","Word Cloud Title") # create word cloud and save image
+# create word cloud and save image
+wcloud(clean_words,"your_file_location/filename","Word Cloud Title")
 ```
 #### Run a sentiment classifier on the dataframe of tweets
 You need a Pandas DataFrame containing a `text` field for the tweet's text.
@@ -89,8 +90,8 @@ tweets_df=pd.read_csv("filename.csv")
 ```
 
 ## To do
--[]	Verify the method that saves the tweets to the database.
--[]	Write code for loading tweets from database into a dataframe. 
--[]	Improve preprocessing for both word clouds and sentiment analysis.
--[]	Train my own sentiment classifier.
--[]	Work on geospacial analysis (partial work done, there is a map function now :smiley:).
+- [ ]	Verify the method that saves the tweets to the database.
+- [ ]	Write code for loading tweets from database into a dataframe. 
+- [ ]	Improve preprocessing for both word clouds and sentiment analysis.
+- [ ]	Train my own sentiment classifier.
+- [ ]	Work on geospacial analysis (partial work done, there is a map function now :smiley:).
