@@ -3,16 +3,18 @@ import tweepy as tw #Twitter hook
 import numpy as np # linear algebra
 import pandas as pd # data processing
 import matplotlib.pyplot as plt
-#s%matplotlib inline
+#database requirements
+from sqlalchemy import create_engine
+from sqlalchemy.types import Text
+#word cloud requirements
 from wordcloud import WordCloud,STOPWORDS
+#sentiment classifier requirements
 import string
 import re
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from sqlalchemy import create_engine
-from sqlalchemy.types import Text
-
+#map requirements
 import geocoder
 import os
 from selenium import webdriver
@@ -379,6 +381,22 @@ def sa_tweets(tweets_df, image_path, image_title):
   return tweets_df
 
 def create_tweets_map(df, map_path):
+  """
+  create a map showing the location of the tweets
+
+  Given a dataframe with a 'user_location' field,
+  it creates a map with markers of all the locations.
+  If the location is not a physical place or the field
+  is empty, the entry will be ignored.
+
+  Parameters:
+  -----------
+  df:       DataFrame
+            Dataframe of tweets. It must have a 'user_location' field.
+
+  map_path: str
+            Location to save the map.
+  """
 
   m=folium.Map()
   for i in range(len(df)):
