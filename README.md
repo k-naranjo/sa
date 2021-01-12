@@ -1,4 +1,4 @@
-# Twitter scraper
+# Twitter scraper for Python
 This is a simple API that allows you to get tweets and analyze them in two different forms:
 
 * Get word clouds of the tweets that match your search
@@ -34,11 +34,11 @@ In order to use this code you must have the following installed:
 * `geckodriver` (map functionality)
 
 
-###Examples
+### Examples
 
 #### Connect to twitter and get tweets matching a search term
 
-```
+```python
 api=connect_to_twitter("your_file_location/twitter_credentials.txt")
 
 search_for="pfizer + vaccine"
@@ -54,7 +54,7 @@ tweets_df=get_tweets(api,search_query,start_date,until_date,num_tweets)
 
 #### Create a word cloud for tweets
 You need a Pandas DataFrame containing a `text` field for the tweet's text.
-```
+```python
 clean_words = clean_word(tweets_df) # clean words for word clouds
 
 # create word cloud and save image
@@ -62,30 +62,30 @@ wcloud(clean_words,"your_file_location/filename","Word Cloud Title")
 ```
 #### Run a sentiment classifier on the dataframe of tweets
 You need a Pandas DataFrame containing a `text` field for the tweet's text.
-```
+```python
 # run sentiment analysis classifier
 new_df=sa_tweets(tweets_df,"file_location")
 ```
 `new_df` is an augmented version of `tweets_df` containing 4 additional fields with the results of the classification: `neg`, `neu`, `pos`, and `compound`. The function will also save a bar graph of the results.
 #### Create a map of user locations
 You need a Pandas DataFrame containing a `user_location` field.
-```
+```python
 #create a map
 create_tweets_map(tweets_df,"image_filename")
 ```
 The resulting map is saved to `image_filename`. There is no need to add an extension, the program does it automatically.
 #### Save tweets to a database
-```
-# #save to database
-# #save_df_to_db(tweets_df,"your_location/database_credentials.txt","location/filename")
+```python
+#save to database
+save_df_to_db(tweets_df,"your_location/database_credentials.txt","location/filename")
 ```
 #### Save tweets to CSV file
-```
+```python
 # save to csv file
 tweets_df.to_csv('filename.csv', index = True)
 ```
 #### Read tweets from a CSV file
-```
+```python
 tweets_df=pd.read_csv("filename.csv")
 ```
 

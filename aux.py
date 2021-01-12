@@ -399,17 +399,34 @@ def create_tweets_map(df, map_path):
   """
 
   m=folium.Map()
+  lats=[]
+  longs=[]
   for i in range(len(df)):
     if df.loc[i,'user_location']!='':
       address=geocoder.osm(df.loc[i,'user_location'])
       if address.ok==False:
         print("Unknown location")
       else:
-        folium.Marker(address.latlng, popup="a popup msg", tooltip='a tooltip').add_to(m)
+        longs.append(address.x)
+        lats.append(address.y)
+        if 'compound' in df.columns:
+          thres=0.25
+          if df.loc[i,'compound']>=thres:
+            folium.Circle(address.latlng, radius=1000, popup="a popup msg", tooltip='a tooltip', color="green", fill=True, fill_color="green").add_to(m)
+          elif df.loc[i, 'compound']<=-thres:
+            folium.Circle(address.latlng, radius=1000, popup="a popup msg", tooltip='a tooltip', color="red", fill=True, fill_color="red").add_to(m)
+          else:
+            folium.Circle(address.latlng, radius=1000, popup="a popup msg", tooltip='a tooltip', color="gray", fill=True, fill_color="gray").add_to(m)
+        else:
+          folium.Circle(address.latlng, popup="a popup msg", tooltip='a tooltip', color="gray", fill=True, fill_color="gray").add_to(m)
 
   fn = map_path+'.html' #path to the html file
   # can be defined to fit all points on the map
-  #m.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]])
+  min_lat=min(lats)
+  max_lat=max(lats)
+  min_lon=min(longs)
+  max_lon=max(longs)
+  m.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]])
   m.save(fn)
   delay = 2
   tmpurl = 'file://{path}/{mapfile}'.format(path=os.getcwd(),mapfile=fn)
